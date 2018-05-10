@@ -2,14 +2,17 @@
 #define __ERROR_HANDLER_HPP__
 
 #include <iostream>
+#include <string>
+
 #include <cstdlib>
+
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 #include <cusparse.h>
 
 #include "meta_utils.hpp"
 
-#define error_check(err) error_handler(err, __LINE__)
+#define error_check(err) error_handler(err, #err, __LINE__)
 
 
 // cuBLAS error message
@@ -70,7 +73,7 @@ const char *error_message(cudaError_t err)
 }
 
 template<typename errT>
-void error_handler(errT err, int line)
+void error_handler(errT err, std::string func, int line)
 {
     static_assert(zex::is_any<errT, cudaError_t, cublasStatus_t, cusparseStatus_t>::value,
                 "Error type must be one of the types: cudaError_t, cublasStatus_t or cusparseStatus_t");
@@ -83,7 +86,8 @@ void error_handler(errT err, int line)
     {
         std::cout << (tidx::value==0 ? "[cuda ERROR]" :
                             tidx::value==1 ? "[cuBLAS ERROR]":"[cuSPARSE ERROR]")
-                  << " in line " << line << ": " << error_message(err) << std::endl;
+                  << " error: " << error_message(err) << std::endl
+                  << " in line [" << line << "] in func: " << func << std::endl;
         exit(1);
     }
 }
