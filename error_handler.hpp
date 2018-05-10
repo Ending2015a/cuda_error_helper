@@ -7,7 +7,7 @@
 #include <cublas_v2.h>
 #include <cusparse.h>
 
-#include "meta_utlis.hpp"
+#include "meta_utils.hpp"
 
 #define error_check(err) error_handler(err, __LINE__)
 
@@ -21,7 +21,7 @@ const char *error_message(cublasStatus_t err)
             return "library not inirialized";
         case CUBLAS_STATUS_ALLOC_FAILED:
             return "failed to allocate resources";
-        case CUBLAS_INVALID_VALUE:
+        case CUBLAS_STATUS_INVALID_VALUE:
             return "invalid value";
         case CUBLAS_STATUS_ARCH_MISMATCH:
             return "device does not support double/half precision";
