@@ -1,16 +1,12 @@
 #include <iostream>
-#include "error_handler.hpp"
-
 #include <cuda_runtime.h>
-#include <cublas_v2.h>
-#include <cusparse.h>
+#include "error_handler.hpp"
 
 int main()
 {
     // error: invalid value
-    double *d = 0;
-    double *a = 0;
-    error_check(cudaMemcpy(d, a, sizeof(int), cudaMemcpyHostToDevice));
+    double *a = 0, *b = 0;
+    error_check(cudaMemcpy(a, b, 10, cudaMemcpyHostToDevice));
 
     return 0;
 }
