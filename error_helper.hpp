@@ -77,7 +77,7 @@ const char *error_message(cudaError_t err)
 }
 
 template<typename errT>
-void error_handler(errT err, std::string func, int line)
+void error_handler(errT err, const std::string& func, int line, const std::string& file)
 {
     static_assert(zex::is_any<errT, cudaError_t, cublasStatus_t, cusparseStatus_t>::value,
                 "Error type must be one of the types: cudaError_t, cublasStatus_t or cusparseStatus_t");
@@ -92,18 +92,7 @@ void error_handler(errT err, std::string func, int line)
                   << "    in file " << file << std::endl;
     }
 
-    /*
-
-    if(err != zex::type_case<tidx::value, zex::tv_pair<cudaError_t, cudaSuccess>,
-                                          zex::tv_pair<cublasStatus_t, CUBLAS_STATUS_SUCCESS>,
-                                          zex::tv_pair<cusparseStatus_t, CUSPARSE_STATUS_SUCCESS>>::type::value)
-    {
-        std::cout << (tidx::value==0 ? "[cuda ERROR]" :
-                            tidx::value==1 ? "[cuBLAS ERROR]":"[cuSPARSE ERROR]")
-                  << " error: " << error_message(err) << std::endl
-                  << " in line [" << line << "] in func: " << func << std::endl;
-        exit(1);
-    }*/
+    exit(1);
 }
 
 #endif

@@ -1,7 +1,7 @@
 # Cuda Error Helper
 
 ## Usage
-1. #include "error_handler.hpp"
+1. #include "error_helper.hpp"
 2. Simply wrap your cuda/cuBLAS/cuSPARSE functions with error_check()
 3. That's it.
 
@@ -24,5 +24,6 @@ int main()
 This example will print out following error message:
 ```
 [cuda ERROR] error: invalid value
- in line [9] in func: cudaMemcpy(a, b, 10, cudaMemcpyHostToDevice);
+    in line [9] : cudaMemcpy(a, b, 10, cudaMemcpyHostToDevice)
+    in file test.cu
 ```
