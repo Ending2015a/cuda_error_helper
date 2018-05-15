@@ -9,7 +9,7 @@
 ```clike=
 #include <iostream>
 #include <cuda_runtime.h>
-#include "error_handler.hpp"
+#include "error_helper.hpp"
 
 int main()
 {
