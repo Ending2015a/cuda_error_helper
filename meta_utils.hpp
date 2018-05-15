@@ -158,6 +158,43 @@ struct tv_pair {
 };
 
 
+// ===== pick/options =====
+
+template<int _case>
+struct pick{
+    constexpr static bool _options() { return false; }
+
+    template<typename T, typename ...Tail>
+    constexpr static auto _options(const T& head, Tail&&...tail)
+        -> decltype(pick<_case-1>::_options(std::forward<Tail>(tail)...))
+    {
+        return pick<_case-1>::_options(tail...);
+    }
+
+    template<typename T, typename ...Tail>
+    constexpr static auto _options(const T& head, Tail&&...tail)
+        -> decltype(pick<_case-1>::_options(tail...))
+    {
+        return pick<_case-1>::_options(tail...);
+    }
+};
+
+template<>
+struct pick<0>{
+    template<typename T, typename ...Tail>
+    constexpr static auto _options(const T& head, Tail&&...tail)
+        -> decltype(head)
+    {
+        return head;
+    }
+
+    template<typename T, typename ...Tail>
+    constexpr static auto options(const T& head, Tail&&...tail)
+        -> decltype(head)
+    {
+        return head;
+    }
+};
 
 // namespace zex {end}
 }

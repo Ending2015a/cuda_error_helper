@@ -12,7 +12,7 @@
 
 #include "meta_utils.hpp"
 
-#define error_check(err) error_handler(err, #err, __LINE__)
+#define error_check(err) error_handler(err, #err, __LINE__, __FILE__)
 
 
 // cuBLAS error message
@@ -52,6 +52,10 @@ const char *error_message(cusparseStatus_t err)
             return "device does not support double/half precision";
         case CUSPARSE_STATUS_EXECUTION_FAILED:
             return "failed to launch on the GPU";
+        case CUSPARSE_STATUS_MAPPING_ERROR:
+            return "the texture binding falied";
+        case CUSPARSE_STATUS_MATRIX_TYPE_NOT_SUPPORTED:
+            return "the matrix type is not supported";
     }
     return "other error occurred";
 }
@@ -80,6 +84,16 @@ void error_handler(errT err, std::string func, int line)
 
     using tidx = zex::type_index<errT, cudaError_t, cublasStatus_t, cusparseStatus_t>;
 
+    if(err != zex::pick<tidx::value>::options(cudaSuccess, CUBLAS_STATUS_SUCCESS, CUSPARSE_STATUS_SUCCESS))
+    {
+        std::cout << zex::pick<tidx::value>::options("[cuda ERROR]", "[cuBLAS ERROR]", "[cuSPARSE ERROR]")
+                  << " " << error_message(err) << std::endl
+                  << "    in line [" << line << "] : " << func << std::endl
+                  << "    in file " << file << std::endl;
+    }
+
+    /*
+
     if(err != zex::type_case<tidx::value, zex::tv_pair<cudaError_t, cudaSuccess>,
                                           zex::tv_pair<cublasStatus_t, CUBLAS_STATUS_SUCCESS>,
                                           zex::tv_pair<cusparseStatus_t, CUSPARSE_STATUS_SUCCESS>>::type::value)
@@ -89,7 +103,7 @@ void error_handler(errT err, std::string func, int line)
                   << " error: " << error_message(err) << std::endl
                   << " in line [" << line << "] in func: " << func << std::endl;
         exit(1);
-    }
+    }*/
 }
 
 #endif
