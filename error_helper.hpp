@@ -83,16 +83,16 @@ void error_handler(errT err, const std::string& func, int line, const std::strin
                 "Error type must be one of the types: cudaError_t, cublasStatus_t or cusparseStatus_t");
 
     using tidx = zex::type_index<errT, cudaError_t, cublasStatus_t, cusparseStatus_t>;
-
+    
     if(err != zex::pick<tidx::value>::options(cudaSuccess, CUBLAS_STATUS_SUCCESS, CUSPARSE_STATUS_SUCCESS))
     {
         std::cout << zex::pick<tidx::value>::options("[cuda ERROR]", "[cuBLAS ERROR]", "[cuSPARSE ERROR]")
                   << " " << error_message(err) << std::endl
                   << "    in line [" << line << "] : " << func << std::endl
                   << "    in file " << file << std::endl;
+        exit(1);
     }
 
-    exit(1);
 }
 
 #endif
