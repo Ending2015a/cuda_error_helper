@@ -172,7 +172,7 @@ struct pick{
     }
 
     template<typename T, typename ...Tail>
-    constexpr static auto _options(const T& head, Tail&&...tail)
+    constexpr static auto options(const T& head, Tail&&...tail)
         -> decltype(pick<_case-1>::_options(tail...))
     {
         return pick<_case-1>::_options(tail...);
